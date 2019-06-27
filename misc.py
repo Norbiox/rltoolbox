@@ -17,7 +17,7 @@ def window(seq, n=2):
         yield result
 
 
-def plot_learning_stats(learning_history, title: str, grid=True,
+def plot_learning_stats(learning_history, title: str, grid=True, log_scale=False,
                         figsize=(10, 8), show=True, *args, **kwargs):
     fig, ax = plt.subplots(figsize=figsize, dpi=100)
     ax.set_title(title)
@@ -31,12 +31,14 @@ def plot_learning_stats(learning_history, title: str, grid=True,
     ax.legend(lines.values(), lines.keys())
     ax.set_xlabel('episod')
     ax.set_ylabel('ilość kroków')
+    if log_scale:
+        plt.yscale('log')
     if show:
         plt.show()
     return fig, ax
 
 
-def compare_learning_curves(named_learning_histories: dict, title: str,
+def compare_learning_curves(named_learning_histories: dict, title: str, log_scale=False,
                             grid=True, figsize=(10, 8), show=True,
                             *args, **kwargs):
     fig, ax = plt.subplots(figsize=figsize, dpi=100)
@@ -50,6 +52,8 @@ def compare_learning_curves(named_learning_histories: dict, title: str,
     ax.legend(lines.values(), lines.keys())
     ax.set_xlabel('episod')
     ax.set_ylabel('ilość kroków')
+    if log_scale:
+        plt.yscale('log')
     if show:
         plt.show()
     return fig, ax
