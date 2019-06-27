@@ -102,11 +102,22 @@ class CMACQ(CMACAlgorithm):
 
 class CMACSARSA(CMACQ):
 
+    def __init__(self, environment, lambd=0.0, gamma=0.95, alpha=0.1,
+                 *args, **kwargs):
+        kwargs.pop('epsilon', None)
+        super().__init__(environment, lambd, None, gamma, alpha,
+                         *args, **kwargs)
+        self.n_layers = len(self.environment.states)
+        self.q = [
+            np.zeros((len(states), len(self.actions)))
+            for states in self.environment.states
+        ]
+
     def run_learning_episode(self, render=False):
         if self.lambd > 0.0:
             e = [np.zeros(q.shape) for q in self.q]
         s = self.environment.state
-        a = self.get_action()
+        a = self.get_action(epsilon_greedy=False)
 
         while True:
             if render:
@@ -115,7 +126,7 @@ class CMACSARSA(CMACQ):
             self.environment.do_action(a)
             r = self.environment.reward
             s_ = self.environment.state
-            a_ = self.get_action()
+            a_ = self.get_action(epsilon_greedy=False)
             delta = [
                 r + self.gamma * self.q[t][s_[t], a_] - self.q[t][s[t], a]
                 for t in range(self.n_layers)

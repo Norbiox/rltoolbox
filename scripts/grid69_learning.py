@@ -13,8 +13,8 @@ if __name__ == "__main__":
         (AHC, {'alpha': 0.1, 'epsilon': 0.1, 'gamma': 0.95, 'lambd': 0.5}),
         (Q, {'alpha': 0.1, 'epsilon': 0.1, 'gamma': 0.95, 'lambd': 0.0}),
         (Q, {'alpha': 0.1, 'epsilon': 0.1, 'gamma': 0.95, 'lambd': 0.5}),
-        (SARSA, {'alpha': 0.1, 'epsilon': 0.1, 'gamma': 0.95, 'lambd': 0.0}),
-        (SARSA, {'alpha': 0.1, 'epsilon': 0.1, 'gamma': 0.95, 'lambd': 0.5}),
+        (SARSA, {'alpha': 0.1, 'gamma': 0.95, 'lambd': 0.0}),
+        (SARSA, {'alpha': 0.1, 'gamma': 0.95, 'lambd': 0.5}),
         (R, {'alpha': 0.1, 'beta': 0.01, 'epsilon': 0.1, 'lambd': 0.0}),
         (R, {'alpha': 0.1, 'beta': 0.01, 'epsilon': 0.1, 'lambd': 0.5})
     ]

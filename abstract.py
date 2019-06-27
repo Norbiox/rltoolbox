@@ -34,11 +34,11 @@ class Algorithm(ABC):
             return self.__class__.__name__ + '(lambda)'
         return self.__class__.__name__ + '(0)'
 
-    def get_action(self) -> int:
-        if random() > self.epsilon:
-            return choice(self.get_greedy_actions())
-        else:
+    def get_action(self, epsilon_greedy=True) -> int:
+        if epsilon_greedy and random() < self.epsilon:
             return choice(self.actions)
+        else:
+            return choice(self.get_greedy_actions())
 
     def learn(self, n_episodes=1, print_status=True, render=False):
         for i in range(n_episodes):

@@ -37,7 +37,7 @@ def plot_learning_stats(learning_history, title: str, grid=True,
 
 
 def compare_learning_curves(named_learning_histories: dict, title: str,
-                            grid=True, figsize=(12, 10), show=True,
+                            grid=True, figsize=(10, 8), show=True,
                             *args, **kwargs):
     fig, ax = plt.subplots(figsize=figsize, dpi=100)
     ax.set_title(title)

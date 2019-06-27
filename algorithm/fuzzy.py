@@ -61,11 +61,21 @@ class FQ(FuzzyAlgorithm):
 
 class FSARSA(FQ):
 
+    def __init__(self, environment, lambd=0.0, gamma=0.95, alpha=0.1,
+                 *args, **kwargs):
+        kwargs.pop('epsilon', None)
+        super().__init__(environment, lambd, None, gamma, alpha,
+                         *args, **kwargs)
+        self.q = np.array([
+            np.zeros(self.environment.approximator.state_shape)
+            for i in self.actions
+        ])
+
     def run_learning_episode(self, render=False):
         if self.lambd > 0.0:
             e = np.zeros(self.q.shape)
         s = self.environment.state
-        a = self.get_action()
+        a = self.get_action(epsilon_greedy=False)
 
         while True:
             if render:
@@ -74,7 +84,7 @@ class FSARSA(FQ):
             self.environment.do_action(a)
             r = self.environment.reward
             s_ = self.environment.state
-            a_ = self.get_action()
+            a_ = self.get_action(epsilon_greedy=False)
             delta = r + self.gamma * self.Q(s_)[a_] - self.Q(s)[a]
             if self.lambd > 0.0:
                 e[a] += phi(s)

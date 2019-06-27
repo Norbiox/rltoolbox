@@ -82,10 +82,17 @@ class Q(ClassicAlgorithm):
 
 class SARSA(Q):
 
+    def __init__(self, environment, lambd=0.0, gamma=0.95, alpha=0.1,
+                 *args, **kwargs):
+        kwargs.pop('epsilon', None)
+        super().__init__(environment, lambd, None, gamma, alpha,
+                         *args, **kwargs)
+        self.Q = np.zeros((len(self.environment.states), len(self.actions)))
+
     def run_learning_episode(self, render=False):
         e = np.zeros(self.Q.shape)
         s = self.environment.state
-        a = self.get_action()
+        a = self.get_action(epsilon_greedy=False)
         while True:
             if render:
                 self.environment.render()
@@ -93,7 +100,7 @@ class SARSA(Q):
             self.environment.do_action(a)
             r = self.environment.reward
             s_ = self.environment.state
-            a_ = self.get_action()
+            a_ = self.get_action(epsilon_greedy=False)
             delta = r + self.gamma * self.Q[s_, a_] - self.Q[s, a]
             if self.lambd > 0.0:
                 e[s, a] += 1
@@ -113,6 +120,7 @@ class R(Q):
 
     def __init__(self, environment, lambd=0.0, epsilon=0.005, alpha=0.1,
                  beta=0.01, *args, **kwargs):
+        kwargs.pop('gamma', None)
         super().__init__(environment, lambd, epsilon, None, alpha,
                          *args, **kwargs)
         self.beta = beta
