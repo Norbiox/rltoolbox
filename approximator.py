@@ -89,7 +89,7 @@ class CMACApproximator(Approximator):
             raise ValueError("number of layers must be at least 2")
         if len(rang) < 2:
             return [rang for i in range(n_layers)]
-        distances = [x - y for x, y in zip(rang[1:], rang[:-1])]
+        distances = [round(x - y, 3) for x, y in zip(rang[1:], rang[:-1])]
         if len(set(distances)) > 1:
             raise ValueError("each state variable space must be divided" +
                              " into equal rang, e.g [-2.0, 0.0, 2.0]")

@@ -23,7 +23,8 @@ class CMACAHC(CMACAlgorithm):
 
     def run_learning_episode(self, render=False):
         if self.lambd > 0.0:
-            e = [np.zeros(mi.shape) for mi in self.mi]
+            e_s = [np.zeros(V.shape) for V in self.V]
+            e_sa = [np.zeros(mi.shape) for mi in self.mi]
 
         while True:
             if render:
@@ -39,12 +40,14 @@ class CMACAHC(CMACAlgorithm):
                 for l in range(self.n_layers)
             ]
             for l in range(self.n_layers):
-                self.V[l][s[l]] += self.alpha / self.n_layers * delta[l]
                 if self.lambd > 0.0:
-                    e[l][s[l], a] += 1
-                    self.mi[l] += self.beta * delta[l] * e[l]
-                    e[l][s[l], :] *= self.gamma * self.lambd
+                    e_s[l][s[l]] += 1
+                    e_sa[l][s[l], a] += 1
+                    self.mi[l] += self.beta * delta[l] * e_sa[l]
+                    e_s[l] *= self.gamma * self.lambd
+                    e_sa[l] *= self.gamma * self.lambd
                 else:
+                    self.V[l][s[l]] += self.alpha / self.n_layers * delta[l]
                     self.mi[l][s[l], a] += self.beta * delta[l]
 
             if self.environment.done:
@@ -83,17 +86,17 @@ class CMACQ(CMACAlgorithm):
             r = self.environment.reward
             s_ = self.environment.state
             delta = [
-                r + self.gamma * self.q[t][s_[t], :].max() - self.q[t][s[t], a]
-                for t in range(self.n_layers)
+                r + self.gamma * self.q[l][s_[l], :].max() - self.q[l][s[l], a]
+                for l in range(self.n_layers)
             ]
-            for t in range(self.n_layers):
+            for l in range(self.n_layers):
                 if self.lambd > 0.0:
-                    e[t][s[t], a] += 1
-                    self.q[t][s[t], :] += self.alpha / self.n_layers * \
-                        delta[t] * e[t][s[t], :]
-                    e[t][s[t], :] *= self.gamma * self.lambd
+                    e[l][s[l], a] += 1
+                    self.q[l][s[l], :] += self.alpha / self.n_layers * \
+                        delta[l] * e[l][s[l], :]
+                    e[l][s[l], :] *= self.gamma * self.lambd
                 else:
-                    self.q[t][s[t], a] += self.alpha / self.n_layers * delta[t]
+                    self.q[l][s[l], a] += self.alpha / self.n_layers * delta[l]
 
             if self.environment.done:
                 self.environment.close()
@@ -128,17 +131,17 @@ class CMACSARSA(CMACQ):
             s_ = self.environment.state
             a_ = self.get_action(epsilon_greedy=False)
             delta = [
-                r + self.gamma * self.q[t][s_[t], a_] - self.q[t][s[t], a]
-                for t in range(self.n_layers)
+                r + self.gamma * self.q[l][s_[l], a_] - self.q[l][s[l], a]
+                for l in range(self.n_layers)
             ]
-            for t in range(self.n_layers):
+            for l in range(self.n_layers):
                 if self.lambd > 0.0:
-                    e[t][s[t], a] += 1
-                    self.q[t][s[t], :] += self.alpha / self.n_layers * \
-                        delta[t] * e[t][s[t], :]
-                    e[t][s[t], :] *= self.gamma * self.lambd
+                    e[l][s[l], a] += 1
+                    self.q[l][s[l], :] += self.alpha / self.n_layers * \
+                        delta[l] * e[l][s[l], :]
+                    e[l][s[l], :] *= self.gamma * self.lambd
                 else:
-                    self.q[t][s[t], a] += self.alpha / self.n_layers * delta[t]
+                    self.q[l][s[l], a] += self.alpha / self.n_layers * delta[l]
 
             if self.environment.done:
                 self.environment.close()
@@ -175,23 +178,23 @@ class CMACR(CMACQ):
             r = self.environment.reward
             s_ = self.environment.state
             delta = [
-                r - rho[t] + self.q[t][s_[t], :].max() - self.q[t][s[t], a]
-                for t in range(self.n_layers)
+                r - rho[l] + self.q[l][s_[l], :].max() - self.q[l][s[l], a]
+                for l in range(self.n_layers)
             ]
-            for t in range(self.n_layers):
+            for l in range(self.n_layers):
                 if self.lambd > 0.0:
-                    e[t][s[t], a] += 1
-                    self.q[t][s[t], :] += self.alpha / self.n_layers * \
-                        delta[t] * e[t][s[t], :]
-                    e[t][s[t], :] *= self.lambd
+                    e[l][s[l], a] += 1
+                    self.q[l][s[l], :] += self.alpha / self.n_layers * \
+                        delta[l] * e[l][s[l], :]
+                    e[l][s[l], :] *= self.lambd
                 else:
-                    self.q[t][s[t], a] += self.alpha / self.n_layers * delta[t]
+                    self.q[l][s[l], a] += self.alpha / self.n_layers * delta[l]
             if a in self.get_greedy_actions(s):
-                for t in range(self.n_layers):
-                    rho[t] += self.beta * (
-                        r - rho[t]
-                        + self.q[t][s_[t], :].max()
-                        - self.q[t][s[t], :].max()
+                for l in range(self.n_layers):
+                    rho[l] += self.beta * (
+                        r - rho[l]
+                        + self.q[l][s_[l], :].max()
+                        - self.q[l][s[l], :].max()
                     )
 
             if self.environment.done:

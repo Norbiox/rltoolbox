@@ -19,7 +19,8 @@ class AHC(ClassicAlgorithm):
 
     def run_learning_episode(self, render=False):
         if self.lambd > 0.0:
-            e = np.zeros(self.mi.shape)
+            e_s = np.zeros(self.V.shape)
+            e_sa = np.zeros(self.mi.shape)
 
         while True:
             if render:
@@ -31,12 +32,15 @@ class AHC(ClassicAlgorithm):
             r = self.environment.reward
             s_ = self.environment.state
             delta = r + self.gamma * self.V[s_] - self.V[s]
-            self.V[s] += self.alpha * delta
             if self.lambd > 0.0:
-                e[s, a] += 1
-                self.mi += self.beta * delta * e
-                e *= self.gamma * self.lambd
+                e_s[s] += 1
+                e_sa[s, a] += 1
+                self.V += self.alpha * delta * e_s
+                self.mi += self.beta * delta * e_sa
+                e_s *= self.gamma * self.lambd
+                e_sa *= self.gamma * self.lambd
             else:
+                self.V[s] += self.alpha * delta
                 self.mi[s, a] += self.beta * delta
 
             if self.environment.done:

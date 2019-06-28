@@ -10,12 +10,15 @@ from rltoolbox.misc import compare_learning_curves, plot_learning_stats
 if __name__ == "__main__":
 
     algorithm = CMACAHC
-    environment = BallBeam(max_steps=10000)
+    environment = BallBeam(max_steps=10000, state_variables_ranges=[
+        [-0.6, -0.2, 0.2, 0.6],
+        [-0.6, -0.2, 0.2, 0.6]
+    ])
     environment.approximate_with(CMACApproximator, n_layers=4)
-    n_episodes = 20
-    n_repeats = 5
+    n_episodes = 10
+    n_repeats = 10
 
-    book_parameters = {'alpha': 2, 'beta': 0.05, 'epsilon': 0.1, 'lambd': 0.0,
+    book_parameters = {'alpha': 0.005/4, 'beta': 0.005/400, 'epsilon': 0.1, 'lambd': 0.5,
                        'gamma': 0.995}
 
     learning_curves = np.zeros((n_repeats, n_episodes))
