@@ -5,13 +5,13 @@ from rltoolbox.environment.continuous import *
 
 
 @pytest.mark.parametrize('ball_position,absorbing,reward',[
-    (-0.7, True, -1.0),
-    (-0.5, True, -1.0),
-    (-0.3, False, 0.0),
+    (-1.2, True, -1.0),
+    (-1.0, True, -1.0),
+    (-0.6, False, 0.0),
     (0.0, False, 0.0),
-    (0.3, False, 0.0),
-    (0.5, True, -1.0),
-    (0.7, True, -1.0)
+    (0.6, False, 0.0),
+    (1.0, True, -1.0),
+    (1.2, True, -1.0)
 ])
 def test_ball_beam_reward_and_state_absorbing(ball_position,
                                               absorbing,

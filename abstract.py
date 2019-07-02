@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod, abstractproperty
 from matplotlib import pyplot as plt
+from numpy import inf
 from random import choice, random
 
 
@@ -40,7 +41,8 @@ class Algorithm(ABC):
         else:
             return choice(self.get_greedy_actions())
 
-    def learn(self, n_episodes=1, print_status=True, render=False):
+    def learn(self, n_episodes=1, stop_when_learned=False, spe_lte=0,
+              spe_gte=inf, wsize=1, print_status=True, render=False):
         for i in range(n_episodes):
             self.environment.clear()
             if print_status:
@@ -49,7 +51,18 @@ class Algorithm(ABC):
                       f"episode:     {self.episodes + 1}\n")
             self.run_learning_episode(render=render)
             self.steps_per_episode.append(len(self.environment.steps))
+            if stop_when_learned and self.is_learned(spe_lte, spe_gte, wsize):
+                break
         return self.steps_per_episode, self.environment
+
+    def is_learned(self, steps_per_episode_lte=0, steps_per_episode_gte=inf,
+                   window_size=1):
+        if len(self.steps_per_episode) < window_size:
+            return False
+        return all([
+            steps_per_episode_gte <= n_steps or n_steps <= steps_per_episode_lte
+            for n_steps in self.steps_per_episode[-window_size:]
+        ])
 
 
 class Approximator(ABC):

@@ -84,7 +84,7 @@ class Grid(Model):
 
 class BallBeam(Model):
     """BallBeam - model of ball balancing on beam"""
-    beam_length = 1
+    beam_length = 2
 
     def __init__(self, init_ball_position=0, init_ball_speed=0,
                  init_beam_theta=np.pi / 8, timestep=0.02,
