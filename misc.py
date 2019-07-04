@@ -1,6 +1,5 @@
 import numpy as np
 import os
-import pendulum
 from itertools import islice
 from matplotlib import pyplot as plt
 from matplotlib.ticker import ScalarFormatter, MultipleLocator
@@ -23,12 +22,16 @@ def plot_learning_stats(learning_history, title: str, grid=True, log_scale=False
     ax.set_title(title)
     if grid:
         plt.grid()
-    lines = {
-        'median': ax.plot(np.median(learning_history, axis=0), label='mediana')[0],
-        'max': ax.plot(np.max(learning_history, axis=0), label='max')[0],
-        'min': ax.plot(np.min(learning_history, axis=0), label='min')[0]
-    }
-    ax.legend(lines.values(), lines.keys())
+    if isinstance(learning_history, list):
+        ax.plot(learning_history)
+    else:
+        lines = {
+            'median': ax.plot(np.median(learning_history, axis=0),
+                              label='mediana')[0],
+            'max': ax.plot(np.max(learning_history, axis=0), label='max')[0],
+            'min': ax.plot(np.min(learning_history, axis=0), label='min')[0]
+        }
+        ax.legend(lines.values(), lines.keys())
     ax.set_xlabel('episod')
     ax.set_ylabel('ilość kroków')
     if log_scale:
