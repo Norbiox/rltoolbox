@@ -26,7 +26,7 @@ if __name__ == "__main__":
         learning_curves = np.zeros((n_repeats, n_episodes))
         for i in range(n_repeats):
             alg_instance = alg[0](environment(), **alg[1])
-            alg_instance.learn(n_episodes)
+            alg_instance.learn(n_episodes, render=True)
             learning_curves[i, :] = alg_instance.steps_per_episode
         histories[str(alg_instance.lambd)] = learning_curves
     

@@ -1,0 +1,19 @@
+@startuml
+
+skinparam package {
+    BackgroundColor White
+    ArrowColor Grey
+    BorderColor Black
+}
+skinparam packageStyle frame
+title .
+package __init__ {
+}
+package algorithm {
+}
+package environment {
+}
+package tests {
+}
+
+@enduml

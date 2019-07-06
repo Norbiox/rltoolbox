@@ -154,6 +154,7 @@ class CMACR(CMACQ):
 
     def __init__(self, environment, lambd=0.0, epsilon=0.005, alpha=0.1,
                  beta=0.01, *args, **kwargs):
+        kwargs.pop('gamma', None)
         super().__init__(environment, lambd, epsilon, None, alpha,
                          *args, **kwargs)
         self.beta = beta

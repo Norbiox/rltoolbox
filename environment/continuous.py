@@ -35,7 +35,7 @@ class MountainCar(Environment):
         [-0.86, -0.52, -0.18, 0.16],
         [-0.042, -0.014, 0.014, 0.042]
     ]
-    max_steps = 1000
+    max_steps = 100000
 
     @property
     def reward(self):

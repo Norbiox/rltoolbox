@@ -237,7 +237,7 @@ class CartPole(Model):
     m = 0.1
     mpc = mc + m
     l = 0.5
-    track_length = 2.4
+    track_length = 4.8
     # for render function
     cart_size = (0.2, 0.08)
     bound_width = 0.2
