@@ -41,6 +41,7 @@ plot_learning_stats(algorithm_instance.steps_per_episode,
 
 ```
 This code runs process of learning agent balancing ball on beam using Q-learning algorithm and table approximation of environment state values.
+Changing value of parameter `render` to True in `algorithm.instance.learn()` will show animation of learning, so you can track and observe behaviour of environment while it learns.
 After all it plots results of learning (number of steps per each episode) using MatPlotLib.
 
 Folder `scripts` contains more ready to use examples of experiments scenarios.
